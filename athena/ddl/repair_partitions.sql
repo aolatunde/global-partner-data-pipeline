@@ -1,0 +1,4 @@
+MSCK REPAIR TABLE global_partner_gold.gold_order_summary;
+MSCK REPAIR TABLE global_partner_gold.gold_daily_restaurant_sales;
+MSCK REPAIR TABLE global_partner_gold.gold_item_performance;
+MSCK REPAIR TABLE global_partner_gold.gold_loyalty_sales_summary;

@@ -1,0 +1,70 @@
+{
+  "Comment": "Global Partner ETL Orchestration",
+  "StartAt": "RunBronzeJob",
+  "States": {
+    "RunBronzeJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "sqlserver_all_tables_to_bronze"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": ["Glue.AWSGlueException", "States.TaskFailed"],
+          "IntervalSeconds": 60,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "PipelineFailed"
+        }
+      ],
+      "Next": "RunSilverJob"
+    },
+    "RunSilverJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "global_partner_bronze_to_silver",
+        "Arguments": {
+          "--bucket_name": "ola-global-partner-project-bucket"
+        }
+      },
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "PipelineFailed"
+        }
+      ],
+      "Next": "RunGoldJob"
+    },
+    "RunGoldJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "global_partner_silver_to_gold",
+        "Arguments": {
+          "--bucket_name": "ola-global-partner-project-bucket"
+        }
+      },
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "PipelineFailed"
+        }
+      ],
+      "Next": "PipelineSucceeded"
+    },
+    "PipelineSucceeded": {
+      "Type": "Succeed"
+    },
+    "PipelineFailed": {
+      "Type": "Fail",
+      "Error": "GlobalPartnerPipelineFailed",
+      "Cause": "One or more ETL stages failed."
+    }
+  }
+}
