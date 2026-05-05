@@ -14,7 +14,7 @@ resource "aws_glue_job" "bronze" {
     python_version  = "3"
   }
 
-  glue_version      = "4.0"
+  glue_version      = "5.0"
   number_of_workers = 2
   worker_type       = "G.1X"
   timeout           = 120
@@ -42,7 +42,7 @@ resource "aws_glue_job" "silver" {
     python_version  = "3"
   }
 
-  glue_version      = "4.0"
+  glue_version      = "5.0"
   number_of_workers = 2
   worker_type       = "G.1X"
   timeout           = 120
@@ -64,7 +64,7 @@ resource "aws_glue_job" "gold" {
     python_version  = "3"
   }
 
-  glue_version      = "4.0"
+  glue_version      = "5.0"
   number_of_workers = 2
   worker_type       = "G.1X"
   timeout           = 120
