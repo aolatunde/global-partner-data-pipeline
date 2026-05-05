@@ -89,17 +89,11 @@ def format_number(value):
 st.sidebar.title("Global Partner Dashboard")
 st.sidebar.caption("Athena-backed analytics app")
 
-with st.sidebar.expander("Connection Settings", expanded=False):
-    aws_region = st.text_input("AWS Region", DEFAULT_REGION)
-    athena_database = st.text_input("Athena Database", DEFAULT_DATABASE)
-    athena_workgroup = st.text_input("Athena Workgroup", DEFAULT_WORKGROUP)
-    athena_output_location = DEFAULT_OUTPUT_LOCATION
-    restaurant_name_sql = st.selectbox(
-        "Restaurant Name Column",
-        ALLOWED_RESTAURANT_NAME_COLUMNS,
-        index=ALLOWED_RESTAURANT_NAME_COLUMNS.index(RESTAURANT_NAME_SQL_DEFAULT),
-        help="Use restaurant_id for current Gold tables, or restaurant_name if you later add that column."
-    )
+aws_region = DEFAULT_REGION
+athena_database = DEFAULT_DATABASE
+athena_workgroup = DEFAULT_WORKGROUP
+athena_output_location = DEFAULT_OUTPUT_LOCATION
+restaurant_name_sql = RESTAURANT_NAME_SQL_DEFAULT
 
 st.sidebar.markdown("---")
 
