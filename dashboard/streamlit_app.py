@@ -17,10 +17,11 @@ st.set_page_config(
 DEFAULT_REGION = os.getenv("AWS_REGION", "us-east-1")
 DEFAULT_DATABASE = os.getenv("ATHENA_DATABASE", "global_partner_gold")
 DEFAULT_WORKGROUP = os.getenv("ATHENA_WORKGROUP", "primary")
-DEFAULT_OUTPUT_LOCATION = os.getenv(
-    "ATHENA_OUTPUT_LOCATION",
-    "s3://aws-athena-query-results-YOUR_AWS_ACCOUNT_NUMBER-us-east-1/"
-)
+DEFAULT_OUTPUT_LOCATION = os.getenv("ATHENA_OUTPUT_LOCATION")
+
+if not DEFAULT_OUTPUT_LOCATION:
+    st.error("Athena output location is not configured.")
+    st.stop()
 
 # Current Gold tables contain restaurant_id.
 # This app aliases restaurant_id as restaurant_name for friendlier dashboard labels.
@@ -91,7 +92,7 @@ with st.sidebar.expander("Connection Settings", expanded=False):
     aws_region = st.text_input("AWS Region", DEFAULT_REGION)
     athena_database = st.text_input("Athena Database", DEFAULT_DATABASE)
     athena_workgroup = st.text_input("Athena Workgroup", DEFAULT_WORKGROUP)
-    athena_output_location = st.text_input("Athena Output S3 Location", DEFAULT_OUTPUT_LOCATION)
+    athena_output_location = DEFAULT_OUTPUT_LOCATION
     restaurant_name_sql = st.text_input(
         "Restaurant Name SQL Column",
         RESTAURANT_NAME_SQL_DEFAULT,
@@ -138,9 +139,8 @@ try:
         athena_workgroup
     )
 
-except Exception as e:
+except Exception:
     st.error("Unable to connect to Athena or load dashboard metadata.")
-    st.code(str(e))
     st.stop()
 
 
@@ -294,9 +294,8 @@ try:
         athena_workgroup
     )
 
-except Exception as e:
-    st.error("Athena query failed.")
-    st.code(str(e))
+except Exception:
+    st.error("Unable to load data from analytics service. Please try again later.")
     st.stop()
 
 
