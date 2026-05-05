@@ -21,15 +21,15 @@ resource "aws_glue_job" "bronze" {
 
   default_arguments = {
     "--enable-continuous-cloudwatch-log" = "true"
-    "--enable-metrics"                  = "true"
-    "--job-language"                    = "python"
-    "--secret_name"                     = var.sql_secret_name
-    "--aws_region"                      = var.aws_region
-    "--target_bucket"                   = var.data_bucket_name
-    "--dynamodb_table"                  = var.dynamodb_table
-    "--pipeline_name"                   = "sqlserver_bronze_ingestion"
-    "--default_bookmark_value"          = "1900-01-01 00:00:00"
-    "--fetchsize"                       = "10000"
+    "--enable-metrics"                   = "true"
+    "--job-language"                     = "python"
+    "--secret_name"                      = var.sql_secret_name
+    "--aws_region"                       = var.aws_region
+    "--target_bucket"                    = var.data_bucket_name
+    "--dynamodb_table"                   = var.dynamodb_table
+    "--pipeline_name"                    = "sqlserver_bronze_ingestion"
+    "--default_bookmark_value"           = "1900-01-01 00:00:00"
+    "--fetchsize"                        = "10000"
   }
 }
 
@@ -49,9 +49,9 @@ resource "aws_glue_job" "silver" {
 
   default_arguments = {
     "--enable-continuous-cloudwatch-log" = "true"
-    "--enable-metrics"                  = "true"
-    "--job-language"                    = "python"
-    "--bucket_name"                     = var.data_bucket_name
+    "--enable-metrics"                   = "true"
+    "--job-language"                     = "python"
+    "--bucket_name"                      = var.data_bucket_name
   }
 }
 
@@ -71,8 +71,8 @@ resource "aws_glue_job" "gold" {
 
   default_arguments = {
     "--enable-continuous-cloudwatch-log" = "true"
-    "--enable-metrics"                  = "true"
-    "--job-language"                    = "python"
-    "--bucket_name"                     = var.data_bucket_name
+    "--enable-metrics"                   = "true"
+    "--job-language"                     = "python"
+    "--bucket_name"                      = var.data_bucket_name
   }
 }

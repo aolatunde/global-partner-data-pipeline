@@ -23,11 +23,12 @@ if not DEFAULT_OUTPUT_LOCATION:
     st.error("Athena output location is not configured.")
     st.stop()
 
-# Current Gold tables contain restaurant_id.
-# This app aliases restaurant_id as restaurant_name for friendlier dashboard labels.
-# If you later add a true restaurant_name column to the Gold tables, set:
-# RESTAURANT_NAME_SQL=restaurant_name
+# Current Gold tables contain restaurant_id. If a true restaurant_name column is
+# added later, set RESTAURANT_NAME_SQL=restaurant_name.
+ALLOWED_RESTAURANT_NAME_COLUMNS = ("restaurant_id", "restaurant_name")
 RESTAURANT_NAME_SQL_DEFAULT = os.getenv("RESTAURANT_NAME_SQL", "restaurant_id")
+if RESTAURANT_NAME_SQL_DEFAULT not in ALLOWED_RESTAURANT_NAME_COLUMNS:
+    RESTAURANT_NAME_SQL_DEFAULT = "restaurant_id"
 
 TABLE_DAILY_SALES = "gold_daily_restaurant_sales"
 TABLE_ITEM_PERFORMANCE = "gold_item_performance"
@@ -93,9 +94,10 @@ with st.sidebar.expander("Connection Settings", expanded=False):
     athena_database = st.text_input("Athena Database", DEFAULT_DATABASE)
     athena_workgroup = st.text_input("Athena Workgroup", DEFAULT_WORKGROUP)
     athena_output_location = DEFAULT_OUTPUT_LOCATION
-    restaurant_name_sql = st.text_input(
-        "Restaurant Name SQL Column",
-        RESTAURANT_NAME_SQL_DEFAULT,
+    restaurant_name_sql = st.selectbox(
+        "Restaurant Name Column",
+        ALLOWED_RESTAURANT_NAME_COLUMNS,
+        index=ALLOWED_RESTAURANT_NAME_COLUMNS.index(RESTAURANT_NAME_SQL_DEFAULT),
         help="Use restaurant_id for current Gold tables, or restaurant_name if you later add that column."
     )
 
